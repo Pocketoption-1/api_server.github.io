@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deriv Approved Payment Agents</title>
+</head>
+<body>
+  <h2>Approved Payment Agents</h2>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    const token = "UA2twasKFzu8ZTK"; // Replace with your token
+    const ws = new WebSocket("wss://ws.deriv.com/websockets/v3");
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ authorize: token }));
+    };
+
+    ws.onmessage = (msg) => {
+      const data = JSON.parse(msg.data);
+
+      if (data.msg_type === "authorize") {
+        const currency = data.authorize.currency;
+        const country = data.authorize.landing_company_shortcode;
+
+        ws.send(
+          JSON.stringify({
+            paymentagent_list: currency,
+            country: country
+          })
+        );
+      }
+
+      if (data.msg_type === "paymentagent_list") {
+        const output = document.getElementById("output");
+        if (data.paymentagent_list.list.length === 0) {
+          output.textContent = "No agents found.";
+        } else {
+          let agents = "Login ID | Name\n";
+          data.paymentagent_list.list.forEach(agent => {
+            agents += `${agent.loginid} | ${agent.name}\n`;
+          });
+          output.textContent = agents;
+        }
+        ws.close();
+      }
+
+      if (data.error) {
+        document.getElementById("output").textContent = `Error: ${data.error.message}`;
+        ws.close();
+      }
+    };
+  </script>
+</body>
+</html>
